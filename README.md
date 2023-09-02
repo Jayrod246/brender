@@ -1,3 +1,15 @@
+(This repository exists specifically for [open3DMM](https://open3dmm.com). Any other usecase at this time is to be considered unsupported.)
+
+This is a fork of [3DMM-BRender](https://github.com/bjrkk/3DMM-BRender), packaged for Zig. Unnecessary
+files have been deleted, and the build system has been replaced with
+`build.zig`. The `upstream` branch of this repository contains a mirror of the
+original source tree. When the upstream repository is updated, the changes are
+merged from `upstream` into this `main` branch.
+
+Original README:
+
+----------------
+
 # Argonaut Blazing Render (BRender)
 
 This is the source code to version 1.1.2 of the BRender engine by Argonaut Software/Argonaut Games, from approximately 1995/09/07, but modified to be cross-platform. Meant to (eventually) be used with 3DMMForever.
