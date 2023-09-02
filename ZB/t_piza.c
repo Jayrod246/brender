@@ -32,6 +32,7 @@ static inline void __TriangleRenderZ2(br_boolean use_light, br_boolean use_bump,
     br_uint_16 *zptr;
     br_uint_8 *ptr, *src;
     br_uint_32 u, v, ecx, edx;
+    br_uint_32 carry;
 
     while (zb.awsl.edge->count > 0)
     {
@@ -219,8 +220,6 @@ static inline void __TriangleRenderZ2(br_boolean use_light, br_boolean use_bump,
 
     next:
         // Per scan line updates
-        br_uint_32 carry;
-
         carry = add_carry(zb.awsl.edge->f, zb.awsl.edge->d_f);
         zb.awsl.end += bpp * (zb.awsl.edge->d_i + carry);
         carry = add_carry(zb.main.f, zb.main.d_f);
