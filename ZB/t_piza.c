@@ -45,7 +45,7 @@ static inline void __TriangleRenderZ2(br_boolean use_light, br_boolean use_bump,
 
         is_forward = zb.awsl.start < zb.awsl.end;
         ptr = zb.awsl.start;
-        u = (zb.awsl.u_current & 0xFFFF0000) | zb.awsl.u_int_current;
+        u = (zb.awsl.u_current & 0xFFFF0000) | (zb.awsl.u_int_current & 0xFFFF); // This line has to be written this way or else graphical issues?
         v = zb.awsl.v_current;
 
         zb.pz.currentpix = zb.pz.current;
