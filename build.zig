@@ -3,11 +3,11 @@ const std = @import("std");
 pub fn build(b: *std.build.Builder) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
-    const use_fixed_point = b.option(
+    const no_fixed_point = b.option(
         bool,
-        "fixed",
-        "Use fixed-point instead of floating-point in BRender math routines.",
-    ) orelse true;
+        "no-fixed",
+        "Use floating-point instead of fixed-point in BRender math routines.",
+    ) orelse false;
 
     const little_endian = target.getCpuArch().endian() == .Little;
 
@@ -25,7 +25,7 @@ pub fn build(b: *std.build.Builder) void {
     lib.addCSourceFiles(brstm_sources, &.{});
 
     if (target.os_tag == .wasi) lib.defineCMacro("__H2INC__", null);
-    lib.defineCMacro(if (use_fixed_point) "BASED_FIXED" else "BASED_FLOAT", "1");
+    lib.defineCMacro(if (no_fixed_point) "BASED_FLOAT" else "BASED_FIXED", "1");
     lib.defineCMacro("BR_ENDIAN_BIG", if (little_endian) "0" else "1");
     lib.defineCMacro("BR_ENDIAN_LITTLE", if (little_endian) "1" else "0");
 
