@@ -24,6 +24,7 @@ pub fn build(b: *std.build.Builder) void {
     lib.addCSourceFiles(brfmm_sources, &.{});
     lib.addCSourceFiles(brstm_sources, &.{});
 
+    if (target.os_tag == .wasi) lib.defineCMacro("__H2INC__", null);
     lib.defineCMacro(if (use_fixed_point) "BASED_FIXED" else "BASED_FLOAT", "1");
     lib.defineCMacro("BR_ENDIAN_BIG", if (little_endian) "0" else "1");
     lib.defineCMacro("BR_ENDIAN_LITTLE", if (little_endian) "1" else "0");
