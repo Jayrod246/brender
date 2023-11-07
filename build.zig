@@ -9,7 +9,7 @@ pub fn build(b: *std.build.Builder) void {
         "Use floating-point instead of fixed-point in BRender math routines.",
     ) orelse false;
 
-    const little_endian = target.getCpuArch().endian() == .Little;
+    const little_endian = target.getCpuArch().endian() == .little;
 
     const lib = b.addStaticLibrary(.{
         .name = "brender",
@@ -19,10 +19,10 @@ pub fn build(b: *std.build.Builder) void {
 
     lib.installHeadersDirectory("INC", "");
 
-    lib.addCSourceFiles(brfwm_sources, &.{});
-    lib.addCSourceFiles(brzbm_sources, &.{});
-    lib.addCSourceFiles(brfmm_sources, &.{});
-    lib.addCSourceFiles(brstm_sources, &.{});
+    lib.addCSourceFiles(.{ .files = brfwm_sources });
+    lib.addCSourceFiles(.{ .files = brzbm_sources });
+    lib.addCSourceFiles(.{ .files = brfmm_sources });
+    lib.addCSourceFiles(.{ .files = brstm_sources });
 
     if (target.os_tag == .wasi) lib.defineCMacro("__H2INC__", null);
     lib.defineCMacro(if (no_fixed_point) "BASED_FLOAT" else "BASED_FIXED", "1");

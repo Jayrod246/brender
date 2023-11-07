@@ -1,0 +1,16 @@
+.{
+    .name = "brender",
+    .version = "0.0.0",
+    .dependencies = .{},
+    .paths = .{
+        "FMT",
+        "FW",
+        "INC",
+        "STD",
+        "ZB",
+        "build.zig",
+        "build.zig.zon",
+        "LICENSE",
+        "README.md",
+    },
+}
