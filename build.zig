@@ -1,6 +1,6 @@
 const std = @import("std");
 
-pub fn build(b: *std.build.Builder) void {
+pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
     const no_fixed_point = b.option(
@@ -9,7 +9,7 @@ pub fn build(b: *std.build.Builder) void {
         "Use floating-point instead of fixed-point in BRender math routines.",
     ) orelse false;
 
-    const little_endian = target.getCpuArch().endian() == .little;
+    const little_endian = target.result.cpu.arch.endian() == .little;
 
     const lib = b.addStaticLibrary(.{
         .name = "brender",
@@ -24,7 +24,7 @@ pub fn build(b: *std.build.Builder) void {
     lib.addCSourceFiles(.{ .files = brfmm_sources });
     lib.addCSourceFiles(.{ .files = brstm_sources });
 
-    if (target.os_tag == .wasi) lib.defineCMacro("__H2INC__", null);
+    if (target.result.os.tag == .wasi) lib.defineCMacro("__H2INC__", null);
     lib.defineCMacro(if (no_fixed_point) "BASED_FLOAT" else "BASED_FIXED", "1");
     lib.defineCMacro("BR_ENDIAN_BIG", if (little_endian) "0" else "1");
     lib.defineCMacro("BR_ENDIAN_LITTLE", if (little_endian) "1" else "0");
@@ -32,7 +32,7 @@ pub fn build(b: *std.build.Builder) void {
     lib.addIncludePath(.{ .path = "INC" });
     lib.addIncludePath(.{ .path = "FW" });
     lib.linkLibC();
-    lib.disable_sanitize_c = true;
+    lib.root_module.sanitize_c = false;
 
     b.installArtifact(lib);
 }
