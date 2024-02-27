@@ -8,6 +8,27 @@ pub const Material = @import("Material.zig");
 pub const Model = @import("Model.zig");
 pub const Actor = @import("Actor.zig");
 
+pub const PixelFormat = enum(u8) {
+    index_1 = 0,
+    index_2 = 1,
+    index_4 = 2,
+    index_8 = 3,
+    rgb_555 = 4,
+    rgb_565 = 5,
+    rgb_888 = 6,
+    rgbx_888 = 7,
+    rgba_8888 = 8,
+    yuyv_8888 = 9,
+    yuv_888 = 10,
+    depth_16 = 11,
+    depth_32 = 12,
+    alpha_8 = 13,
+    indexa_88 = 14,
+    normal_index_8 = 15,
+    normal_xyz = 16,
+    bgr_555 = 17,
+};
+
 pub const LightType = union(enum) {
     directional: struct {
         color: RGB = RGB.white,
