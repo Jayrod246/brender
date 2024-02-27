@@ -11,7 +11,12 @@ pub const MaterialAllocOptions = struct {
     kd: c.br_ufraction,
     ks: c.br_ufraction,
     power: br.Scalar,
-    flags: u32 = 0,
+    flags: packed struct(u32) {
+        light: bool = false,
+        prelit: bool = false,
+        smooth: bool = false,
+        _: u29 = 0,
+    },
     map_transform: br.Matrix23 = br.Matrix23.identity,
     index_base: u8,
     index_range: u8,
@@ -40,7 +45,7 @@ pub inline fn alloc(opts: MaterialAllocOptions) ?*Material {
         .kd = opts.kd,
         .ks = opts.ks,
         .power = opts.power,
-        .flags = opts.flags,
+        .flags = @bitCast(opts.flags),
         .map_transform = @bitCast(opts.map_transform),
         .index_base = opts.index_base,
         .index_range = opts.index_range,
@@ -54,6 +59,11 @@ pub inline fn alloc(opts: MaterialAllocOptions) ?*Material {
     return material;
 }
 
+pub inline fn update(self: *Material) void {
+    self.BrMaterialUpdate(c.BR_MATU_ALL);
+}
+
+extern fn BrMaterialUpdate(material: *Material, flags: c.br_uint_16) void;
 extern fn BrMaterialAdd(material: *Material) *Material;
 extern fn BrMaterialAllocate(name: [*c]u8) ?*Material;
 
