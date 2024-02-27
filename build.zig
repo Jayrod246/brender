@@ -34,6 +34,12 @@ pub fn build(b: *std.Build) void {
     lib.linkLibC();
     lib.root_module.sanitize_c = false;
 
+    const brender_mod = b.addModule("brender", .{
+        .root_source_file = .{ .path = "src/brender.zig" },
+    });
+
+    brender_mod.addIncludePath(.{ .path = "INC" });
+    brender_mod.addIncludePath(.{ .path = "FW" });
     b.installArtifact(lib);
 }
 
