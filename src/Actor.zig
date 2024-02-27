@@ -40,21 +40,25 @@ pub inline fn addAlloc(self: *Actor, opts: ActorAllocOptions) *Actor {
     return self.add(alloc(opts) orelse @panic("oom"));
 }
 
-// TODO: figure out why this must be inlined?
 pub inline fn alloc(opts: ActorAllocOptions) ?*Actor {
+    const actor = BrActorAllocate(opts, null) orelse return null;
+    actor.init(opts);
+    return actor;
+}
+
+pub fn init(self: *Actor, opts: ActorAllocOptions) void {
+    assert(self.node.type == @intFromEnum(opts));
     switch (opts) {
         .none => {
-            return BrActorAllocate(.none, null);
+            return;
         },
         .model => |input| {
-            const model = BrActorAllocate(.model, null) orelse return null;
-            const set_model, const set_material = model.getTypeData().model;
+            const set_model, const set_material = self.getTypeData().model;
             set_model.* = input.model;
             set_material.* = @alignCast(@ptrCast(input.material));
-            return model;
         },
         .light => |input| {
-            var light: c.br_light = switch (input) {
+            self.getTypeData().light.* = switch (input) {
                 .directional => |dl| .{
                     .type = c.BR_LIGHT_DIRECT,
                     .colour = @bitCast(dl.color),
@@ -77,11 +81,10 @@ pub inline fn alloc(opts: ActorAllocOptions) ?*Actor {
                     .cone_inner = sl.inner_cone,
                 },
             };
-            return BrActorAllocate(.light, @ptrCast(&light));
         },
         .reserved, .bounds, .bounds_correct, .clip_plane => @panic("not implemented"),
-        .camera => |*camera| {
-            return BrActorAllocate(.camera, @constCast(@ptrCast(camera)));
+        .camera => |camera| {
+            self.getTypeData().camera.* = camera;
         },
     }
 }
@@ -140,3 +143,4 @@ pub fn setTransform(self: *Actor, new_transform: br.Transform) void {
 const br = @import("brender.zig");
 const c = br.c;
 const std = @import("std");
+const assert = std.debug.assert;
