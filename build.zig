@@ -17,7 +17,7 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
-    lib.installHeadersDirectory("INC", "");
+    lib.installHeadersDirectory(.{ .path = "INC" }, "", .{});
 
     lib.addCSourceFiles(.{ .files = brfwm_sources });
     lib.addCSourceFiles(.{ .files = brzbm_sources });
