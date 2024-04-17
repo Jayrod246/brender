@@ -17,7 +17,7 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
-    lib.installHeadersDirectory(.{ .path = "INC" }, "", .{});
+    lib.installHeadersDirectory(b.path("INC"), "", .{});
 
     lib.addCSourceFiles(.{ .files = brfwm_sources });
     lib.addCSourceFiles(.{ .files = brzbm_sources });
@@ -29,8 +29,8 @@ pub fn build(b: *std.Build) void {
     lib.defineCMacro("BR_ENDIAN_BIG", if (little_endian) "0" else "1");
     lib.defineCMacro("BR_ENDIAN_LITTLE", if (little_endian) "1" else "0");
 
-    lib.addIncludePath(.{ .path = "INC" });
-    lib.addIncludePath(.{ .path = "FW" });
+    lib.addIncludePath(b.path("INC"));
+    lib.addIncludePath(b.path("FW"));
     lib.linkLibC();
     lib.root_module.sanitize_c = false;
 
